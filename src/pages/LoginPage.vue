@@ -1,5 +1,7 @@
+// src/pages/LoginPage.vue
+
 <template>
-  <q-page class="flex flex-center bg-grey-2">
+  <div class="fullscreen bg-grey-2 flex flex-center">
     <q-card class="q-pa-md shadow-2 my-card" style="width: 400px;">
       <q-card-section class="text-center">
         <div class="text-grey-9 text-h5 text-weight-bold">Bem-vindo</div>
@@ -10,7 +12,7 @@
         <q-form @submit.prevent="handleLogin" class="q-gutter-md">
           <q-input
             filled
-            v-model="form.nomeUsuario"
+            v-model="form.nome_usuario"
             label="Nome de Usuário"
             lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, digite seu usuário']"
@@ -18,7 +20,7 @@
 
           <q-input
             filled
-            v-model="form.senhaUsuario"
+            v-model="form.senha"
             label="Senha"
             type="password"
             lazy-rules
@@ -35,36 +37,33 @@
         </q-form>
       </q-card-section>
     </q-card>
-  </q-page>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { useAuthStore } from 'src/stores/auth-store'; // O cérebro da nossa autenticação
+import { useAuthStore } from 'src/stores/auth-store';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
 const form = ref({
-  nomeUsuario: '',
-  senhaUsuario: ''
+  nome_usuario: '',
+  senha: ''
 });
 
 const loading = ref(false);
 const authStore = useAuthStore();
 const router = useRouter();
-const $q = useQuasar(); // Para mostrar notificações
+const $q = useQuasar();
 
 const handleLogin = async () => {
   loading.value = true;
   try {
     await authStore.login(form.value);
-    router.push({ name: 'home' }); // Redireciona para a home após o login
+    router.push({ name: 'home' });
   } catch (error) {
-    // 1. Definimos uma mensagem de erro padrão.
     let errorMessage = 'Usuário ou senha inválidos. Tente novamente.';
 
-    // 2. (Opcional, mas recomendado) Tentamos extrair a mensagem de erro específica da sua API.
-    //    O Axios geralmente coloca os detalhes do erro em error.response.data.
     if (error.response && error.response.data && error.response.data.message) {
       errorMessage = error.response.data.message;
     }
