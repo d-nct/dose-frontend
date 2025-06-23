@@ -1,8 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
-
-// A URL base da sua API
-const API_URL = import.meta.env.VITE_API_URL;
+import { api } from 'boot/axios';
 
 export const useReviewsStore = defineStore('reviews', {
   state: () => ({
@@ -12,7 +9,7 @@ export const useReviewsStore = defineStore('reviews', {
   actions: {
     async fetchReviews() {
       try {
-        const response = await axios.get(`${API_URL}/avaliacoes`); // Endpoint para buscar avaliações
+        const response = await api.get('/avaliacoes');
         this.reviews = response.data;
       } catch (error) {
         console.error('Erro ao buscar avaliações:', error);
@@ -22,7 +19,7 @@ export const useReviewsStore = defineStore('reviews', {
 
     async createReview(reviewData) {
       try {
-        const response = await axios.post(`${API_URL}/avaliacoes`, reviewData); // Endpoint para criar avaliação
+        const response = await api.post('/avaliacoes', reviewData);
         // Adiciona a nova avaliação no início da lista para reatividade
         this.reviews.unshift(response.data);
       } catch (error) {
@@ -30,5 +27,31 @@ export const useReviewsStore = defineStore('reviews', {
         throw error;
       }
     },
+
+    async voteForReview(reviewId, voteType) {
+      try {
+        const response = await api.post(`/avaliacoes/${reviewId}/voto`, { tipoVoto: voteType });
+        this.updateReviewInState(response.data);
+      } catch (error) {
+        console.error(`Erro ao registrar voto (${voteType}):`, error);
+        throw error;
+      }
+    },
+
+    async upvoteReview(reviewId) {
+      await this.voteForReview(reviewId, 'upvote');
+    },
+
+    async downvoteReview(reviewId) {
+      await this.voteForReview(reviewId, 'downvote');
+    },
+
+    // Ação auxiliar para atualizar uma avaliação no state sem recarregar tudo
+    updateReviewInState(updatedReview) {
+      const index = this.reviews.findIndex(r => r._id === updatedReview._id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      }
+    }
   },
 });

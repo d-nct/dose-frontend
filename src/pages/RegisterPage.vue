@@ -88,12 +88,7 @@ const handleRegister = async () => {
   loading.value = true;
   try {
     await authStore.register(form.value);
-    $q.notify({
-      color: 'positive',
-      message: 'Conta criada com sucesso! Faça o login para continuar.',
-      icon: 'check_circle'
-    });
-    router.push({ name: 'login' });
+    router.push({ name: 'register-success' });
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'Não foi possível criar a conta. O usuário já pode existir.';
     $q.notify({

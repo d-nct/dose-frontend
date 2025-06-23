@@ -20,6 +20,16 @@ const routes = [
     name: 'register'
   },
   {
+    path: '/register-success',
+    component: () => import('pages/RegisterSuccessPage.vue'),
+    name: 'register-success'
+  },
+  {
+    path: '/reference/new',
+    component: () => import('pages/NewReferencePage.vue'),
+    name: 'new-reference'
+  },
+  {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
   }

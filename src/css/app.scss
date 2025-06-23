@@ -1,1 +1,26 @@
 // app global css in SCSS form
+
+// 1. Importa as duas fontes do Google Fonts em uma única chamada.
+//    Pegamos o peso 700 (bold) para o título e 400 (regular) para o texto.
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@700&family=Overlock:wght@400&display=swap');
+
+// 2. Define 'Overlock' como a fonte padrão para todo o aplicativo.
+body {
+  font-family: 'Overlock', serif; // 'cursive' é um fallback genérico
+}
+
+// 3. Define 'Inknut Antiqua' para todos os títulos e classes de título do Quasar.
+//    Isso garante que qualquer texto com ênfase de título use a fonte correta.
+.q-toolbar__title,
+.text-h1,
+.text-h2,
+.text-h3,
+.text-h4,
+.text-h5,
+.text-h6 {
+  font-family: 'Inknut Antiqua', serif; // 'serif' é um fallback genérico
+}
+
+.q-separator {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
