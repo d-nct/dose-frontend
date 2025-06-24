@@ -23,7 +23,7 @@
         <div class="row q-col-gutter-md">
           <div class="col-5">
             <q-img
-              :src="review.drink?.imagem"
+              :src="review.drink?.imagem || defaultImageUrl"
               :ratio="1"
               class="rounded-borders"
             >
@@ -68,6 +68,7 @@ import { useReviewsStore } from 'src/stores/reviews-store';
 
 const reviewsStore = useReviewsStore();
 const loading = ref(false);
+const defaultImageUrl = import.meta.env.VITE_DEFAULT_IMAGE_URL;
 
 const fetchReviews = async () => {
   loading.value = true;

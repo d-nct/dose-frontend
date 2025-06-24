@@ -1,156 +1,263 @@
 <template>
-  <q-page class="q-pa-md">
-    <div class="row justify-center">
-      <div class="col-12 col-md-8" style="max-width: 700px;">
-        <h4 class="page-title q-mb-md">Avaliar um Drink</h4>
+  <q-page class="q-pa-md bg-grey-10 text-white">
+    <div class="q-mx-auto" style="max-width: 500px">
+      <h4 class="text-center q-mt-none q-mb-md">Nova Avaliação</h4>
 
-        <q-form @submit.prevent="handleSubmit">
-          <q-card flat bordered>
-            <q-card-section class="q-gutter-md">
-              <q-select filled dark v-model="form.drink" use-input hide-selected fill-input input-debounce="0"
-                :options="filteredDrinks" @filter="filterFn" @new-value="addNewDrink" option-value="_id"
-                option-label="nome" label="Qual drink você avaliou? (Digite para criar um novo)" lazy-rules
-                :rules="[val => !!val || 'Por favor, selecione ou crie um drink']" :loading="loadingDrinks">
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      Nenhum resultado. Pressione Enter para adicionar.
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
+      <q-form @submit.prevent="onSubmit" class="q-gutter-md">
+        <q-select
+          filled
+          dark
+          color="amber"
+          v-model="avaliacao.estabelecimento"
+          :options="estabelecimentoOptions"
+          option-value="_id"
+          option-label="nome"
+          label="Onde você bebeu?"
+          lazy-rules
+          :rules="[val => !!val || 'Por favor, selecione um estabelecimento']"
+          emit-value
+          map-options
+        >
+          <template v-slot:append>
+            <q-btn round dense flat icon="add" @click="irParaPaginaCriacaoEstabelecimento">
+              <q-tooltip class="bg-amber text-black" :offset="[10, 10]">
+                Criar novo estabelecimento
+              </q-tooltip>
+            </q-btn>
+          </template>
+        </q-select>
 
-              <div>
-                <q-item-label class="q-mb-sm">Nota</q-item-label>
-                <q-rating v-model="ratingModel" max="5" size="2.5em" color="primary" icon="star_border"
-                  icon-selected="star" icon-half="star_half" half-increments />
-              </div>
+        <q-select
+          filled
+          dark
+          color="amber"
+          v-model="avaliacao.drink"
+          :options="drinkOptions"
+          option-value="_id"
+          option-label="nome"
+          label="Qual foi o drink?"
+          lazy-rules
+          :rules="[val => !!val || 'Por favor, selecione um drink']"
+          emit-value
+          map-options
+        >
+          <template v-slot:append>
+            <q-btn round dense flat icon="add" @click="irParaPaginaCriacaoDrink">
+              <q-tooltip class="bg-amber text-black" :offset="[10, 10]">
+                Criar novo drink
+              </q-tooltip>
+            </q-btn>
+          </template>
+        </q-select>
 
-              <q-input v-model="form.comentario" filled dark type="textarea" label="Como foi sua experiência?"
-                lazy-rules :rules="[val => val && val.length > 0 || 'Por favor, escreva um comentário']" />
+        <div class="q-py-md">
+          <p class="q-mb-sm text-grey-5">Qual a sua nota?</p>
+          <q-rating
+            v-model="avaliacao.nota"
+            size="2.5em"
+            :max="5"
+            color="amber"
+            icon="star_border"
+            icon-selected="star"
+          />
+        </div>
 
-              <q-input v-model="form.destilado_base" filled dark label="Qual foi o destilado principal?" />
-            </q-card-section>
+        <q-input
+          v-model="avaliacao.comentario"
+          filled
+          dark
+          color="amber"
+          type="textarea"
+          label="Escreva sua avaliação"
+          placeholder="O que você achou do drink?"
+          lazy-rules
+          :rules="[val => !!val && val.length > 0 || 'Seu comentário não pode estar vazio']"
+        />
+        
+        <q-input
+          v-model="avaliacao.destilado_base"
+          filled
+          dark
+          color="amber"
+          label="Destilado Base (Opcional)"
+          placeholder="Ex: Cachaça Velho Barreiro, Vodka Smirnoff"
+        />
+        
+        <q-input
+          v-model.number="avaliacao.preco"
+          filled
+          dark
+          color="amber"
+          type="number"
+          label="Preço (Opcional)"
+          prefix="R$"
+          :step="0.01"
+        />
 
-            <q-separator dark />
+        <q-file
+          v-model="imagemFile"
+          filled
+          dark
+          color="amber"
+          label="Envie uma foto do drink (Opcional)"
+          accept="image/*"
+        >
+          <template v-slot:prepend>
+            <q-icon name="camera_alt" />
+          </template>
+        </q-file>
 
-            <q-card-actions class="q-pa-md">
-              <q-btn label="Enviar Avaliação" type="submit" color="primary" class="full-width" size="lg"
-                :loading="submitting" />
-            </q-card-actions>
-          </q-card>
-        </q-form>
-      </div>
+        <div class="q-pt-md">
+          <q-btn label="Publicar Avaliação" type="submit" color="primary" class="full-width" size="lg" />
+        </div>
+      </q-form>
     </div>
   </q-page>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-import { useDrinksStore } from 'src/stores/drinks-store';
-import { useReviewsStore } from 'src/stores/reviews-store';
+import { api } from 'boot/axios'; 
 
+// --- Reatividade e Setup ---
 const $q = useQuasar();
 const router = useRouter();
-const drinksStore = useDrinksStore();
-const reviewsStore = useReviewsStore();
 
-const form = ref({
-  drink: null,
+// Guarda os dados do formulário
+const avaliacao = ref({
   nota: 0,
   comentario: '',
-  destilado_base: ''
+  destilado_base: '',
+  estabelecimento: null, // Guardará o ID do estabelecimento
+  drink: null, // Guardará o ID do drink
+  // O ID do usuário deve ser obtido do seu sistema de autenticação
+  // usuario: 'ID_DO_USUARIO_LOGADO', 
+  preco: null
 });
 
-// 1. LÓGICA DA NOTA
-const ratingModel = ref(0); // Modelo para o q-rating (0 a 5)
-// Observa o modelo de 5 estrelas e atualiza o de 10 pontos
-watch(ratingModel, (newValue) => {
-  form.value.nota = newValue * 2;
-});
+const imagemFile = ref(null); // Para o upload do arquivo da imagem
 
-const loadingDrinks = ref(false);
-const submitting = ref(false);
-const filteredDrinks = ref([]);
+// Guarda as opções para os campos de seleção
+const estabelecimentoOptions = ref([]);
+const drinkOptions = ref([]);
 
-// 2. LÓGICA DE CRIAR/FILTRAR DRINKS
-const filterFn = (val, update) => {
-  if (val === '') {
-    update(() => {
-      filteredDrinks.value = drinksStore.drinks;
-    });
-    return;
-  }
+// --- Funções ---
 
-  update(() => {
-    const needle = val.toLowerCase();
-    filteredDrinks.value = drinksStore.drinks.filter(
-      v => v.nome.toLowerCase().indexOf(needle) > -1
-    );
-  });
-};
+function irParaPaginaCriacaoEstabelecimento() {
+  router.push('/estabelecimentos/new');
+}
 
-const addNewDrink = async (inputValue, doneFn) => {
-  submitting.value = true;
+function irParaPaginaCriacaoDrink() {
+  router.push('/drinks/new');
+}
+
+// Busca os estabelecimentos da API para preencher o QSelect
+async function fetchEstabelecimentos() {
   try {
-    const newDrink = await drinksStore.createDrink({ nome: inputValue });
-    // Define o drink recém-criado como o selecionado no formulário
-    form.value.drink = newDrink;
-    doneFn(newDrink, 'add-unique');
+    const response = await api.get('/estabelecimentos');
+    estabelecimentoOptions.value = response.data;
   } catch (err) {
-    $q.notify({ 
-      color: 'negative', 
-      message: 'Não foi possível criar o novo drink.',
+    $q.notify({
+      color: 'negative',
+      position: 'top',
+      message: 'Falha ao carregar estabelecimentos.',
+      icon: 'report_problem',
       error: err
     });
-  } finally {
-    submitting.value = false;
   }
-};
+}
 
-
-const handleSubmit = async () => {
-  submitting.value = true;
+// Busca os drinks da API para preencher o QSelect
+async function fetchDrinks() {
   try {
-    const payload = {
-      ...form.value,
-      drink: form.value.drink._id
-    };
-
-    await reviewsStore.createReview(payload);
+    const response = await api.get('/drinks');
+    drinkOptions.value = response.data;
+  } catch (err) {
     $q.notify({
-      color: 'positive',
-      icon: 'check_circle',
-      message: 'Avaliação enviada com sucesso!'
+      color: 'negative',
+      position: 'top',
+      message: 'Falha ao carregar drinks.',
+      icon: 'report_problem',
+      error: err
+    });
+  }
+}
+
+// Função chamada ao submeter o formulário
+async function onSubmit() {
+  // Nota: O schema de avaliação pede uma nota de 0 a 10.
+  // O QRating está com max=5, então vamos dobrar o valor.
+  const notaFinal = avaliacao.value.nota * 2;
+
+  // FormData é ideal para enviar dados de formulário e arquivos
+  const formData = new FormData();
+  
+  // Adiciona os campos do schema de avaliação
+  formData.append('nota', notaFinal);
+  formData.append('comentario', avaliacao.value.comentario);
+  formData.append('destilado_base', avaliacao.value.destilado_base);
+  formData.append('estabelecimento', avaliacao.value.estabelecimento);
+  formData.append('drink', avaliacao.value.drink);
+  
+  // IMPORTANTE: Você precisa adicionar o ID do usuário logado aqui.
+  // formData.append('usuario', authStore.user.id);
+
+  if (imagemFile.value) {
+    formData.append('imagem', imagemFile.value); // O backend precisa processar este arquivo
+  }
+  
+  // Lógica para enviar o preço para o backend
+  // O backend deve associar este preço ao drink naquele estabelecimento
+  if (avaliacao.value.preco) {
+    formData.append('preco', avaliacao.value.preco);
+  }
+
+  $q.loading.show({ message: 'Publicando...' });
+
+  try {
+    // Envia os dados para a API
+    await api.post('/avaliacoes', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     });
 
-    await reviewsStore.fetchReviews();
-    router.push({ name: 'home' });
+    $q.notify({
+      color: 'positive',
+      position: 'top',
+      message: 'Avaliação publicada com sucesso!',
+      icon: 'check_circle'
+    });
+    
+    // Redireciona o usuário para a página inicial ou para a página da avaliação
+    router.push('/'); 
 
   } catch (err) {
     $q.notify({
       color: 'negative',
+      position: 'top',
+      message: 'Ocorreu um erro ao publicar. Tente novamente.',
       icon: 'report_problem',
-      message: 'Não foi possível enviar a avaliação. Tente novamente.',
       error: err
     });
   } finally {
-    submitting.value = false;
+    $q.loading.hide();
   }
-};
+}
 
-onMounted(async () => {
-  loadingDrinks.value = true;
-  await drinksStore.fetchDrinks();
-  filteredDrinks.value = drinksStore.drinks; // Inicializa o filtro
-  loadingDrinks.value = false;
+// --- Lifecycle Hook ---
+
+// Quando o componente for montado, busca os dados iniciais
+onMounted(() => {
+  fetchEstabelecimentos();
+  fetchDrinks();
 });
 </script>
 
-<style lang="scss" scoped>
-.page-title {
-  font-family: 'Inknut Antiqua', serif;
+<style scoped>
+.q-page {
+  background-color: #121212; /* Cor de fundo escura, similar à imagem */
 }
 </style>

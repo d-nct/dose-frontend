@@ -13,6 +13,15 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isAuthenticated: (state) => !!state.token,
+    canManageContent: (state) => {
+      return state.usuario && state.usuario.credencial > 1;
+    },
+    canManagePeople: (state) => {
+      return state.usuario && state.usuario.credencial > 2;
+    },
+    isGod: (state) => {
+      return state.usuario && state.usuario.credencial > 3;
+    },
   },
 
   actions: {
