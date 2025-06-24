@@ -36,7 +36,19 @@
           />
         </q-form>
       </q-card-section>
-    </q-card>
+
+      <q-separator />
+      <q-card-section class="text-center q-pa-sm">
+        <q-btn
+          label="Não tem uma conta? Registre-se"
+          color="primary"
+          flat
+          dense
+          no-caps
+          :to="{ name: 'register' }"
+        />
+      </q-card-section>
+      </q-card>
   </div>
 </template>
 
