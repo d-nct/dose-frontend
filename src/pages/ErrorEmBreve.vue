@@ -1,9 +1,8 @@
 <template>
   <div class="fullscreen text-center q-pa-md flex flex-center">
     <div>
-      <!-- <div style="font-size: 30vh"> -->
-      <div class="text-h1">
-        404
+      <div class="text-h2">
+        Em construção!
       </div>
 
       <div class="text-h3 q-mt-xl" style="opacity:.4">
