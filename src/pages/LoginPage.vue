@@ -1,31 +1,37 @@
-// src/pages/LoginPage.vue
-
 <template>
-  <div class="fullscreen dark-page flex flex-center">
-    <q-card class="q-pa-md shadow-1 my-card" style="width: 400px;">
-      <q-card-section class="text-center">
-        <div class="claro text-h5 text-weight-bold">Bem-vindo</div>
-        <div class="claro">Faça login para continuar</div>
-      </q-card-section>
+  <div class="fullscreen dark-page flex flex-center column">
+    <div class="claro text-h5 text-weight-bold q-mb-md">
+      bora tomar uma
+    </div>
 
-      <q-card-section>
-        <q-form @submit.prevent="handleLogin" class="q-gutter-md">
-          <q-input filled v-model="form.nome_usuario" label="Nome de Usuário" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, digite seu usuário']" />
+    <div class="q-mb-md"> <img src="/icons/favicon-256x256.png" alt="Logo Dose"
+        style="height: 180px; width: 180px; border-radius: 30%; object-fit: cover;" />
+    </div>
 
-          <q-input filled v-model="form.senha" label="Senha" type="password" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, digite sua senha']" />
+    <div style="width: 300px; max-width: 90%;"> <q-form @submit.prevent="handleLogin" class="q-gutter-y-lg">
+        <q-input v-model="form.nome_usuario" label="nome do sommelier" lazy-rules
+          :rules="[val => val && val.length > 0 || 'Digite seu usuário direito']" class="custom-input-login"
+          label-color="grey-5" color="primary" dark>
+          <template v-slot:prepend>
+            <q-icon name="sentiment_very_satisfied" color="grey-5" /> </template>
+        </q-input>
 
-          <q-btn label="Login" type="submit" color="primary" class="full-width" :loading="loading" />
-        </q-form>
-      </q-card-section>
+        <q-input v-model="form.senha" label="senha" type="password" lazy-rules
+          :rules="[val => val && val.length > 0 || 'Digite sua senha direito']" class="custom-input-login"
+          label-color="grey-5" color="primary" dark>
+          <template v-slot:prepend>
+            <q-icon name="lock" color="grey-5" /> </template>
+        </q-input>
 
-      <q-separator />
-      <q-card-section class="text-center text-weight-bold q-pa-sm">
-        <q-btn label="Não tem uma conta? Registre-se" class="text-weight-semibold" color="claro" flat dense no-caps
-          :to="{ name: 'register' }" />
-      </q-card-section>
-    </q-card>
+        <q-btn label="Login" type="submit" color="primary" class="full-width q-mt-md" :loading="loading" />
+
+        <q-separator color="grey-8" class="q-mt-md" />
+        <div class="text-center q-pa-sm">
+          <q-btn label="Registre-se! Registre-se! Registre-se!" class="text-weight-semibold" color="primary" flat dense
+            no-caps :to="{ name: 'register' }" />
+        </div>
+      </q-form>
+    </div>
   </div>
 </template>
 
@@ -69,7 +75,24 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-.my-card {
-  border-radius: 12px;
+/*
+  O .my-card não é mais necessário, pois removemos o q-card.
+  Ajustamos o estilo dos inputs para ficarem mais parecidos com o screenshot.
+*/
+.custom-input-login {
+  .q-field__control:before {
+    border-bottom: 1px solid #757575 !important;
+    /* Cor da linha inferior padrão */
+  }
+
+  .q-field__control:hover:before {
+    border-bottom: 1px solid var(--q-color-primary) !important;
+    /* Cor da linha inferior ao passar o mouse */
+  }
+
+  .q-field__control:after {
+    border-bottom: 2px solid var(--q-color-primary) !important;
+    /* Cor da linha inferior quando focado */
+  }
 }
 </style>

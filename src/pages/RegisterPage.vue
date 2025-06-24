@@ -1,6 +1,6 @@
 <template>
   <div class="fullscreen dark-page flex flex-center">
-    <q-card class="q-pa-md shadow-1 my-card" style="width: 400px;">
+    <q-card class="q-pa-md dark shadow-1 my-card" style="width: 400px;">
       <q-card-section class="text-center">
         <div class="claro text-h5 text-weight-bold">Criar Conta</div>
         <div class="claro">É rápido e fácil.</div>
