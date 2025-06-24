@@ -1,9 +1,10 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="bg-dark text-white" bordered>
+    <!-- TODO: Deshardcodar a cor -->
+    <q-header style="background-color: #121210" class="text-white">
       <q-toolbar class="flex flex-center">
         <q-toolbar-title class="text-center">
-          <span class="logo-font">dose</span>
+          <img src="/texto-dose.png" alt="Logo Dose" class="q-mt-sm" style="height: 40px; max-width: 100%;" />
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -12,14 +13,8 @@
       <router-view />
     </q-page-container>
 
-    <q-footer class="bg-dark text-white" bordered>
-      <q-tabs
-        v-model="tab"
-        class="text-grey-5"
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-      >
+    <q-footer style="background-color: #121210" class="text-white">
+      <q-tabs v-model="tab" class="text-grey-5" active-color="primary" indicator-color="primary" align="justify">
         <q-route-tab to="/" name="home" icon="home" />
         <q-route-tab to="/review/new" name="new-review" icon="add_circle" />
         <q-route-tab to="/profile" name="profile" icon="person" />

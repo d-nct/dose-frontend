@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="text-h4 q-mb-md text-weight-bold page-title">Feed</div>
+    <div class="text-h6 q-mb-md text-weight-bold page-title">Tá na boca do povo:</div>
 
     <div v-if="loading" class="flex flex-center q-my-xl">
       <q-spinner-dots color="primary" size="50px" />
@@ -14,19 +14,16 @@
     <div v-else>
       <div v-for="review in reviewsStore.reviews" :key="review._id" class="review-item q-mb-lg">
         <div class="row items-center justify-between q-mb-sm">
-          <div class="text-h6 text-weight-bold title-font">
-            {{ review.drink?.nome || "Birinight" }}, de {{ review.estabelecimento?.nome || "um botequim qualquer..." }}
+          <div class="text-h7 text-weight-bold title-font">
+            {{ review.drink?.nome || "Birinight" }}, de {{ review.estabelecimento?.nome || "um botequim qualquer" }}
           </div>
-          <div class="text-caption text-grey-6">{{ formatDate(review.data_criacao) }}</div>
+          <div class="text-caption text-grey-6">{{ formatDate(review.data_criacao) || "Não lembro quando"
+          }}</div>
         </div>
 
         <div class="row q-col-gutter-md">
           <div class="col-5">
-            <q-img
-              :src="review.drink?.imagem || defaultImageUrl"
-              :ratio="1"
-              class="rounded-borders"
-            >
+            <q-img :src="review.drink?.imagem || defaultImageUrl" :ratio="1" class="rounded-borders">
               <template v-slot:error>
                 <div class="absolute-full flex flex-center bg-negative text-white">
                   Não foi possível carregar a imagem
@@ -36,22 +33,13 @@
           </div>
           <div class="col-7">
             <div class="text-subtitle1">
-              <span class="text-weight-bold">{{ review.usuario?.nome_usuario }}</span> disse:
+              <span class="text-weight-bold">{{ review.usuario?.nome_usuario || "Alguém" }}</span> disse:
             </div>
-            <p class="q-mt-xs">{{ review.comentario }}</p>
-            <q-rating
-              :model-value="review.nota / 2"
-              max="5"
-              size="22px"
-              color="primary"
-              icon="star_border"
-              icon-selected="star"
-              icon-half="star_half"
-              readonly
-              half-increments
-            />
+            <p class="q-mt-xs">{{ review.comentario || "Na verdade, nada declarou..." }}</p>
+            <q-rating :model-value="review.nota / 2" max="5" size="22px" color="primary" icon="star_border"
+              icon-selected="star" icon-half="star_half" readonly half-increments />
             <div class="q-mt-md text-caption text-grey-5">
-              <div>Preço: R$ {{ review.preco?.toFixed(2).replace('.', ',') }}</div>
+              <div>Preço: R$ {{ review.preco?.toFixed(2).replace('.', ',') || "??" }}</div>
               <div>{{ review.drink?.ingrediente_principal }}</div>
             </div>
           </div>
@@ -93,9 +81,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.page-title, .title-font {
+.page-title,
+.title-font {
   font-family: 'Inknut Antiqua', serif;
 }
+
 .review-item .text-h6 {
   line-height: 1.2
 }
