@@ -1,9 +1,8 @@
 // src/stores/auth-store.js
 
 import { defineStore } from 'pinia';
+import { api } from 'boot/axios';
 import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -26,13 +25,13 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async register(credentials) {
-      const response = await axios.post(`${API_URL}/usuarios/`, credentials);
+      const response = await api.post(`/usuarios/`, credentials);
       return response.data;
     },
 
     async login(credentials) {
       try {
-        const response = await axios.post(`${API_URL}/usuarios/login`, credentials);
+        const response = await api.post(`/usuarios/login`, credentials);
 
         const { token, ...userData } = response.data;
 
