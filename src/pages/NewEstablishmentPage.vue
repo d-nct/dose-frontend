@@ -83,11 +83,12 @@ async function onSubmit() {
 
   try {
     // Envia os dados para a API criar um novo estabelecimento
-    await api.post('/estabelecimentos', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+    // await api.post('/estabelecimentos', formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data'
+    //   }
+    // });
+    await api.post('/estabelecimentos', formData); // Sem imagem, por enquanto
 
     $q.notify({
       color: 'positive',

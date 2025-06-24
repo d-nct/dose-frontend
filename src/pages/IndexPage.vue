@@ -15,7 +15,7 @@
       <div v-for="review in reviewsStore.reviews" :key="review._id" class="review-item q-mb-lg">
         <div class="row items-center justify-between q-mb-sm">
           <div class="text-h6 text-weight-bold title-font">
-            {{ review.drink?.nome }}, do {{ review.estabelecimento?.nome }}
+            {{ review.drink?.nome || "Birinight" }}, de {{ review.estabelecimento?.nome || "um botequim qualquer..." }}
           </div>
           <div class="text-caption text-grey-6">{{ formatDate(review.data_criacao) }}</div>
         </div>

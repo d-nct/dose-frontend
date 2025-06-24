@@ -120,10 +120,13 @@ import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { api } from 'boot/axios'; 
+import { useAuthStore } from 'src/stores/auth-store';
 
 // --- Reatividade e Setup ---
 const $q = useQuasar();
 const router = useRouter();
+const authStore = useAuthStore();
+
 
 // Guarda os dados do formulário
 const avaliacao = ref({
@@ -132,8 +135,6 @@ const avaliacao = ref({
   destilado_base: '',
   estabelecimento: null, // Guardará o ID do estabelecimento
   drink: null, // Guardará o ID do drink
-  // O ID do usuário deve ser obtido do seu sistema de autenticação
-  // usuario: 'ID_DO_USUARIO_LOGADO', 
   preco: null
 });
 
@@ -187,22 +188,23 @@ async function fetchDrinks() {
 
 // Função chamada ao submeter o formulário
 async function onSubmit() {
-  // Nota: O schema de avaliação pede uma nota de 0 a 10.
-  // O QRating está com max=5, então vamos dobrar o valor.
-  const notaFinal = avaliacao.value.nota * 2;
+  // Verifica o login
+  if (!authStore.usuario || !authStore.usuario._id) {
+    $q.notify({
+      color: 'negative',
+      message: 'Você precisa estar logado para criar uma avaliação.'
+    });
+    return; // Para a execução da função
+  }
 
-  // FormData é ideal para enviar dados de formulário e arquivos
   const formData = new FormData();
-  
   // Adiciona os campos do schema de avaliação
-  formData.append('nota', notaFinal);
+  formData.append('nota', avaliacao.value.nota * 2);
   formData.append('comentario', avaliacao.value.comentario);
   formData.append('destilado_base', avaliacao.value.destilado_base);
   formData.append('estabelecimento', avaliacao.value.estabelecimento);
   formData.append('drink', avaliacao.value.drink);
-  
-  // IMPORTANTE: Você precisa adicionar o ID do usuário logado aqui.
-  // formData.append('usuario', authStore.user.id);
+  formData.append('usuario', authStore.usuario._id);
 
   if (imagemFile.value) {
     formData.append('imagem', imagemFile.value); // O backend precisa processar este arquivo
