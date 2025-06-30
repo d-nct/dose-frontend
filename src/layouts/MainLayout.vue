@@ -17,7 +17,7 @@
       <q-tabs v-model="tab" class="text-grey-5" active-color="primary" indicator-color="primary" align="justify">
         <q-route-tab to="/" name="home" icon="home" />
         <q-route-tab to="/review/new" name="new-review" icon="add_circle" />
-        <q-route-tab to="/profile" name="profile" icon="person" />
+        <!-- <q-route-tab to="/profile" name="profile" icon="person" /> -->
       </q-tabs>
     </q-footer>
   </q-layout>

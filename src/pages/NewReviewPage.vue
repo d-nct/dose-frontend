@@ -4,20 +4,9 @@
       <h4 class="text-center q-mt-none q-mb-md">Nova Avaliação</h4>
 
       <q-form @submit.prevent="onSubmit" class="q-gutter-md">
-        <q-select
-          filled
-          dark
-          color="amber"
-          v-model="avaliacao.estabelecimento"
-          :options="estabelecimentoOptions"
-          option-value="_id"
-          option-label="nome"
-          label="Onde você bebeu?"
-          lazy-rules
-          :rules="[val => !!val || 'Por favor, selecione um estabelecimento']"
-          emit-value
-          map-options
-        >
+        <q-select filled dark color="amber" v-model="avaliacao.estabelecimento" :options="estabelecimentoOptions"
+          option-value="_id" option-label="nome" label="Onde você bebeu?" lazy-rules
+          :rules="[val => !!val || 'Por favor, selecione um estabelecimento']" emit-value map-options>
           <template v-slot:append>
             <q-btn round dense flat icon="add" @click="irParaPaginaCriacaoEstabelecimento">
               <q-tooltip class="bg-amber text-black" :offset="[10, 10]">
@@ -27,20 +16,9 @@
           </template>
         </q-select>
 
-        <q-select
-          filled
-          dark
-          color="amber"
-          v-model="avaliacao.drink"
-          :options="drinkOptions"
-          option-value="_id"
-          option-label="nome"
-          label="Qual foi o drink?"
-          lazy-rules
-          :rules="[val => !!val || 'Por favor, selecione um drink']"
-          emit-value
-          map-options
-        >
+        <q-select filled dark color="amber" v-model="avaliacao.drink" :options="drinkOptions" option-value="_id"
+          option-label="nome" label="Qual é o goró?" lazy-rules
+          :rules="[val => !!val || 'Por favor, selecione um drink']" emit-value map-options>
           <template v-slot:append>
             <q-btn round dense flat icon="add" @click="irParaPaginaCriacaoDrink">
               <q-tooltip class="bg-amber text-black" :offset="[10, 10]">
@@ -52,60 +30,28 @@
 
         <div class="q-py-md">
           <p class="q-mb-sm text-grey-5">Qual a sua nota?</p>
-          <q-rating
-            v-model="avaliacao.nota"
-            size="2.5em"
-            :max="5"
-            color="amber"
-            icon="star_border"
-            icon-selected="star"
-          />
+          <q-rating v-model="avaliacao.nota" size="2.5em" :max="5" color="amber" icon="star_border"
+            icon-selected="star" />
         </div>
 
-        <q-input
-          v-model="avaliacao.comentario"
-          filled
-          dark
-          color="amber"
-          type="textarea"
-          label="Escreva sua avaliação"
-          placeholder="O que você achou do drink?"
-          lazy-rules
-          :rules="[val => !!val && val.length > 0 || 'Seu comentário não pode estar vazio']"
-        />
-        
-        <q-input
-          v-model="avaliacao.destilado_base"
-          filled
-          dark
-          color="amber"
-          label="Destilado Base (Opcional)"
-          placeholder="Ex: Cachaça Velho Barreiro, Vodka Smirnoff"
-        />
-        
-        <q-input
-          v-model.number="avaliacao.preco"
-          filled
-          dark
-          color="amber"
-          type="number"
-          label="Preço (Opcional)"
-          prefix="R$"
-          :step="0.01"
-        />
+        <q-input v-model="avaliacao.comentario" filled dark color="amber" type="textarea" label="Escreva sua avaliação"
+          placeholder="O que você achou?" lazy-rules
+          :rules="[val => !!val && val.length > 0 || 'Seu comentário não pode estar vazio']" />
 
-        <q-file
-          v-model="imagemFile"
-          filled
-          dark
-          color="amber"
-          label="Envie uma foto do drink (Opcional)"
-          accept="image/*"
-        >
+        <q-input v-model="avaliacao.destilado_base" filled dark color="amber" label="Destilado Base"
+          placeholder="Ex: Cachaça Velho Barreiro, Vodka Smirnoff" />
+
+        <q-input v-model.number="avaliacao.preco" filled dark color="amber" type="number" label="Preço" prefix="R$"
+          :step="0.01" />
+
+        <q-file v-model="imagemFile" filled dark color="amber" label="Adicione uma foto!" accept="image/*">
           <template v-slot:prepend>
             <q-icon name="camera_alt" />
           </template>
         </q-file>
+
+        <q-input v-model.number="avaliacao.usuario_nome" filled dark color="amber" label="Quem és tu?"
+          placeholder="Ex: Velha Raposa" :rules="[val => !!val && val.length > 0 || 'Você não tem nome?']" />
 
         <div class="q-pt-md">
           <q-btn label="Publicar Avaliação" type="submit" color="primary" class="full-width" size="lg" />
@@ -119,13 +65,13 @@
 import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-import { api } from 'boot/axios'; 
-import { useAuthStore } from 'src/stores/auth-store';
+import { api } from 'boot/axios';
+// import { useAuthStore } from 'src/stores/auth-store';
 
 // --- Reatividade e Setup ---
 const $q = useQuasar();
 const router = useRouter();
-const authStore = useAuthStore();
+// const authStore = useAuthStore();
 
 
 // Guarda os dados do formulário
@@ -135,7 +81,8 @@ const avaliacao = ref({
   destilado_base: '',
   estabelecimento: null, // Guardará o ID do estabelecimento
   drink: null, // Guardará o ID do drink
-  preco: null
+  preco: null,
+  usuario_nome: ''
 });
 
 const imagemFile = ref(null); // Para o upload do arquivo da imagem
@@ -189,13 +136,13 @@ async function fetchDrinks() {
 // Função chamada ao submeter o formulário
 async function onSubmit() {
   // Verifica o login
-  if (!authStore.usuario || !authStore.usuario._id) {
-    $q.notify({
-      color: 'negative',
-      message: 'Você precisa estar logado para criar uma avaliação.'
-    });
-    return; // Para a execução da função
-  }
+  // if (!authStore.usuario || !authStore.usuario._id) {
+  //   $q.notify({
+  //     color: 'negative',
+  //     message: 'Você precisa estar logado para criar uma avaliação.'
+  //   });
+  //   return; // Para a execução da função
+  // }
 
   const formData = new FormData();
   // Adiciona os campos do schema de avaliação
@@ -204,12 +151,13 @@ async function onSubmit() {
   formData.append('destilado_base', avaliacao.value.destilado_base);
   formData.append('estabelecimento', avaliacao.value.estabelecimento);
   formData.append('drink', avaliacao.value.drink);
-  formData.append('usuario', authStore.usuario._id);
+  formData.append('usuario_nome', avaliacao.value.usuario_nome);
+  // formData.append('usuario', authStore.usuario._id);
 
   if (imagemFile.value) {
     formData.append('imagem', imagemFile.value); // O backend precisa processar este arquivo
   }
-  
+
   // Lógica para enviar o preço para o backend
   // O backend deve associar este preço ao drink naquele estabelecimento
   if (avaliacao.value.preco) {
@@ -232,9 +180,9 @@ async function onSubmit() {
       message: 'Avaliação publicada com sucesso!',
       icon: 'check_circle'
     });
-    
+
     // Redireciona o usuário para a página inicial ou para a página da avaliação
-    router.push('/'); 
+    router.push('/');
 
   } catch (err) {
     $q.notify({
@@ -260,6 +208,7 @@ onMounted(() => {
 
 <style scoped>
 .q-page {
-  background-color: #121212; /* Cor de fundo escura, similar à imagem */
+  background-color: #121212;
+  /* Cor de fundo escura, similar à imagem */
 }
 </style>
