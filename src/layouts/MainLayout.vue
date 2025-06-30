@@ -4,7 +4,8 @@
     <q-header style="background-color: #121210" class="text-white">
       <q-toolbar class="flex flex-center">
         <q-toolbar-title class="text-center">
-          <img src="/texto-dose.png" alt="Logo Dose" class="q-mt-sm" style="height: 40px; max-width: 100%;" />
+          <img src="/texto-dose.png" alt="Logo Dose" class="q-mt-sm" style="height: 40px; max-width: 100%;"
+            @click="goHome" />
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -25,8 +26,14 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const tab = ref('home');
+const router = useRouter();
+
+const goHome = () => {
+  router.push({ path: '/' });
+};
 </script>
 
 <style lang="scss" scoped>
