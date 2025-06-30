@@ -18,7 +18,7 @@
             {{ review.drink?.nome || "Birinight" }}, de {{ review.estabelecimento?.nome || "um botequim qualquer" }}
           </div>
           <div class="text-caption text-grey-6">{{ formatDate(review.data_criacao) || "Não lembro quando"
-            }}</div>
+          }}</div>
         </div>
 
         <div class="row q-col-gutter-md">
@@ -50,6 +50,8 @@
             </p>
             <q-btn v-if="shouldShowToggleButton(review.comentario)" flat dense no-caps size="sm" color="primary"
               :label="isExpanded(review._id) ? 'Ver menos' : 'Ver mais'" @click="toggleExpand(review._id)" />
+            <q-btn v-else flat dense no-caps size="sm" color="primary" label="Ver mais"
+              :to="{ name: 'review-details', params: { id: review._id } }" />
           </div>
         </div>
         <q-separator class="q-mt-lg" />

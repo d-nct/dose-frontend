@@ -52,6 +52,16 @@ export const useReviewsStore = defineStore('reviews', {
       if (index !== -1) {
         this.reviews[index] = updatedReview;
       }
+    },
+
+    async fetchReviewById(reviewId) {
+      try {
+        const response = await api.get(`/avaliacoes/${reviewId}`);
+        return response.data;
+      } catch (error) {
+        console.error(`Erro ao buscar a avaliação ${reviewId}:`, error);
+        throw error;
+      }
     }
   },
 });

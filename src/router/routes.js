@@ -37,6 +37,12 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: 'review/:id',
+        component: () => import('pages/ReviewDetailsPage.vue'),
+        name: 'review-details',
+        meta: { requiresAuth: false },
+      },
+      {
         path: 'profile', // O caminho base, ex: tudosebebe.com/perfil
         component: () => import('pages/profile/ProfilePage.vue'), // O componente PAI
         // component: () => import('pages/ErrorEmBreve.vue'),
