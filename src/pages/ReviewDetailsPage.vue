@@ -1,5 +1,10 @@
 <template>
-  <q-page class="q-pa-md">
+  <!-- <q-page class="fullscreen dark-page flex flex-center column"> -->
+  <q-page class="q-pa-md flex">
+    <!-- <q-page-sticky position="top-left" :offset="[18, 18]"> <q-btn icon="arrow_back" flat dense round color="grey-5"
+        @click="voltar" />
+    </q-page-sticky> -->
+
     <div v-if="loading" class="flex flex-center q-my-xl">
       <q-spinner-dots color="primary" size="50px" />
     </div>
@@ -28,12 +33,8 @@
 
         <q-card-section class="row q-col-gutter-lg">
           <div class="col-12 col-md-5 flex flex-center">
-            <q-img
-              :src="review.drink?.imagem || defaultImageUrl"
-              :ratio="1"
-              class="rounded-borders"
-              style="max-width: 300px"
-            >
+            <q-img :src="review.drink?.imagem || defaultImageUrl" :ratio="1" class="rounded-borders"
+              style="max-width: 300px">
               <template v-slot:error>
                 <div class="absolute-full flex flex-center bg-negative text-white">
                   Imagem não disponível
@@ -47,17 +48,8 @@
 
             <div class="row items-center q-mb-sm">
               <span class="text-weight-bold q-mr-sm">Nota:</span>
-              <q-rating
-                :model-value="review.nota / 2"
-                max="5"
-                size="2em"
-                color="primary"
-                icon="star_border"
-                icon-selected="star"
-                icon-half="star_half"
-                readonly
-                half-increments
-              />
+              <q-rating :model-value="review.nota / 2" max="5" size="2em" color="primary" icon="star_border"
+                icon-selected="star" icon-half="star_half" readonly half-increments />
             </div>
 
             <div class="q-mb-sm">
@@ -74,21 +66,12 @@
               <div class="text-subtitle1 text-weight-bold">
                 {{ review.usuario?.nome_usuario || "Um usuário anônimo" }} comentou:
               </div>
-              <p class="text-body1 q-mt-sm comment-box">
+              <p class="text-black q-mt-sm comment-box">
                 {{ review.comentario || "Nenhum comentário deixado." }}
               </p>
             </div>
           </div>
         </q-card-section>
-
-        <q-separator />
-
-        <q-card-actions class="q-pa-md">
-          <q-btn flat round icon="share" />
-          <q-btn flat color="primary">Compartilhar</q-btn>
-          <q-space />
-          <q-btn to="/" label="Ver outras avaliações" color="primary" outline />
-        </q-card-actions>
       </q-card>
     </div>
   </q-page>
@@ -97,9 +80,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+// import { useRoute, useRouter } from 'vue-router';
 import { useReviewsStore } from 'src/stores/reviews-store';
 
 const route = useRoute();
+// const router = useRouter();
 const reviewsStore = useReviewsStore();
 
 const loading = ref(false);
@@ -138,6 +123,14 @@ const formatDate = (dateString) => {
     year: 'numeric',
   });
 };
+
+// const voltar = () => {
+//   if (window.history.length > 1) {
+//     router.go(-1);
+//   } else {
+//     router.push({ path: '/' });
+//   }
+// };
 
 onMounted(() => {
   fetchReviewDetails();
