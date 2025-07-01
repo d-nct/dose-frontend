@@ -4,20 +4,9 @@
       <h4 class="text-center q-mt-none q-mb-md">Nova Avaliação</h4>
 
       <q-form @submit.prevent="onSubmit" class="q-gutter-md">
-        <q-select
-          filled
-          dark
-          color="amber"
-          v-model="avaliacao.estabelecimento"
-          :options="estabelecimentoOptions"
-          option-value="_id"
-          option-label="nome"
-          label="Onde você bebeu?"
-          lazy-rules
-          :rules="[val => !!val || 'Por favor, selecione um estabelecimento']"
-          emit-value
-          map-options
-        >
+        <q-select filled dark color="amber" v-model="avaliacao.estabelecimento" :options="estabelecimentoOptions"
+          option-value="_id" option-label="nome" label="Onde você bebeu?" lazy-rules
+          :rules="[val => !!val || 'Por favor, selecione um estabelecimento']" emit-value map-options>
           <template v-slot:append>
             <q-btn round dense flat icon="add" @click="irParaPaginaCriacaoEstabelecimento">
               <q-tooltip class="bg-amber text-black" :offset="[10, 10]">
@@ -27,20 +16,9 @@
           </template>
         </q-select>
 
-        <q-select
-          filled
-          dark
-          color="amber"
-          v-model="avaliacao.drink"
-          :options="drinkOptions"
-          option-value="_id"
-          option-label="nome"
-          label="Qual foi o drink?"
-          lazy-rules
-          :rules="[val => !!val || 'Por favor, selecione um drink']"
-          emit-value
-          map-options
-        >
+        <q-select filled dark color="amber" v-model="avaliacao.drink" :options="drinkOptions" option-value="_id"
+          option-label="nome" label="Qual foi o drink?" lazy-rules
+          :rules="[val => !!val || 'Por favor, selecione um drink']" emit-value map-options>
           <template v-slot:append>
             <q-btn round dense flat icon="add" @click="irParaPaginaCriacaoDrink">
               <q-tooltip class="bg-amber text-black" :offset="[10, 10]">
@@ -52,56 +30,22 @@
 
         <div class="q-py-md">
           <p class="q-mb-sm text-grey-5">Qual a sua nota?</p>
-          <q-rating
-            v-model="avaliacao.nota"
-            size="2.5em"
-            :max="5"
-            color="amber"
-            icon="star_border"
-            icon-selected="star"
-          />
+          <q-rating v-model="avaliacao.nota" size="2.5em" :max="5" color="amber" icon="star_border"
+            icon-selected="star" />
         </div>
 
-        <q-input
-          v-model="avaliacao.comentario"
-          filled
-          dark
-          color="amber"
-          type="textarea"
-          label="Escreva sua avaliação"
-          placeholder="O que você achou do drink?"
-          lazy-rules
-          :rules="[val => !!val && val.length > 0 || 'Seu comentário não pode estar vazio']"
-        />
-        
-        <q-input
-          v-model="avaliacao.destilado_base"
-          filled
-          dark
-          color="amber"
-          label="Destilado Base (Opcional)"
-          placeholder="Ex: Cachaça Velho Barreiro, Vodka Smirnoff"
-        />
-        
-        <q-input
-          v-model.number="avaliacao.preco"
-          filled
-          dark
-          color="amber"
-          type="number"
-          label="Preço (Opcional)"
-          prefix="R$"
-          :step="0.01"
-        />
+        <q-input v-model="avaliacao.comentario" filled dark color="amber" type="textarea" label="Escreva sua avaliação"
+          placeholder="O que você achou do drink?" lazy-rules
+          :rules="[val => !!val && val.length > 0 || 'Seu comentário não pode estar vazio']" />
 
-        <q-file
-          v-model="imagemFile"
-          filled
-          dark
-          color="amber"
-          label="Envie uma foto do drink (Opcional)"
-          accept="image/*"
-        >
+        <q-input v-model="avaliacao.destilado_base" filled dark color="amber" label="Destilado Base (Opcional)"
+          placeholder="Ex: Cachaça Velho Barreiro, Vodka Smirnoff" />
+
+        <q-input v-model.number="avaliacao.preco" filled dark color="amber" type="number" label="Preço (Opcional)"
+          prefix="R$" :step="0.01" />
+
+        <q-file v-model="imagemFile" filled dark color="amber" label="Envie uma foto do drink (Opcional)"
+          accept="image/*">
           <template v-slot:prepend>
             <q-icon name="camera_alt" />
           </template>
@@ -119,7 +63,7 @@
 import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-import { api } from 'boot/axios'; 
+import { api } from 'boot/axios';
 import { useAuthStore } from 'src/stores/auth-store';
 
 // --- Reatividade e Setup ---
@@ -209,9 +153,7 @@ async function onSubmit() {
   if (imagemFile.value) {
     formData.append('imagem', imagemFile.value); // O backend precisa processar este arquivo
   }
-  
-  // Lógica para enviar o preço para o backend
-  // O backend deve associar este preço ao drink naquele estabelecimento
+
   if (avaliacao.value.preco) {
     formData.append('preco', avaliacao.value.preco);
   }
@@ -232,9 +174,9 @@ async function onSubmit() {
       message: 'Avaliação publicada com sucesso!',
       icon: 'check_circle'
     });
-    
+
     // Redireciona o usuário para a página inicial ou para a página da avaliação
-    router.push('/'); 
+    router.push('/');
 
   } catch (err) {
     $q.notify({
@@ -260,6 +202,7 @@ onMounted(() => {
 
 <style scoped>
 .q-page {
-  background-color: #121212; /* Cor de fundo escura, similar à imagem */
+  background-color: #121212;
+  /* Cor de fundo escura, similar à imagem */
 }
 </style>

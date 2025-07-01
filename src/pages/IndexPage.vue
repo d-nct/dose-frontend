@@ -37,11 +37,13 @@
 
               <!-- Coloca em full width para não concatenar com o Destilado -->
               <div class="text-caption text-grey-5 full-width">
-                Preço: R$ {{ review.preco?.toFixed(2).replace('.', ',') || "??" }}
+                Preço: R$ {{ (review.preco?.$numberDecimal ?
+                  parseFloat(review.preco.$numberDecimal).toFixed(2).replace('.', ',') :
+                '??') }}
               </div>
 
               <div class="text-caption text-grey-5 full-width">
-                Destilado: {{ review.drink?.destilado_base || "??" }}
+                Destilado: {{ review.destilado_base || "??" }}
               </div>
             </div>
 
