@@ -24,7 +24,7 @@
           </div>
 
           <div class="row q-col-gutter-md">
-            <div class="col-5 flex flex-column items-center"> <q-img :src="(review.imagem) || defaultImageUrl"
+            <div class="col-5 flex flex-column items-center"> <q-img :src="getImageUrl(review.imagem) || defaultImageUrl"
                 :ratio="1" class="rounded-borders q-mb-sm">
                 <template v-slot:error>
                   <div class="absolute-full flex flex-center bg-negative text-white">
@@ -99,17 +99,17 @@ const truncateComment = (comment) => {
   return comment.substring(0, CHARACTER_LIMIT) + '...';
 };
 
-// const getImageUrl = (caminhoRelativo) => {
-//   if (!caminhoRelativo) {
-//     return defaultImageUrl;
-//   }
+const getImageUrl = (caminhoRelativo) => {
+  if (!caminhoRelativo) {
+    return defaultImageUrl;
+  }
 
-//   // Garante que as barras estejam no formato correto para URL (/)
-//   const caminhoCorrigido = caminhoRelativo.replace(/\\/g, '/');
+  // Garante que as barras estejam no formato correto para URL (/)
+  const caminhoCorrigido = caminhoRelativo.replace(/\\/g, '/');
 
-//   // Monta e retorna a URL completa
-//   return `${import.meta.env.VITE_API_URL}/${caminhoCorrigido}`;
-// };
+  // Monta e retorna a URL completa
+  return `${import.meta.env.VITE_API_URL}/${caminhoCorrigido}`;
+};
 
 onMounted(() => {
   fetchReviews();
