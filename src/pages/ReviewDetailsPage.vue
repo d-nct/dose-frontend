@@ -33,8 +33,7 @@
 
         <q-card-section class="row q-col-gutter-lg">
           <div class="col-12 col-md-5 flex flex-center">
-            <q-img :src="review.drink?.imagem || defaultImageUrl" :ratio="1" class="rounded-borders"
-              style="max-width: 300px">
+            <q-img :src="getImageUrl(review.imagem) || defaultImageUrl" style="max-width: 300px">
               <template v-slot:error>
                 <div class="absolute-full flex flex-center bg-negative text-white">
                   Imagem não disponível
@@ -54,7 +53,9 @@
 
             <div class="q-mb-sm">
               <span class="text-weight-bold">Preço:</span>
-              <span class="text-grey-8"> R$ {{ review.preco?.toFixed(2).replace('.', ',') || 'Não informado' }}</span>
+              <span class="text-grey-8"> R$ {{ (review.preco?.$numberDecimal ?
+                parseFloat(review.preco.$numberDecimal).toFixed(2).replace('.', ',') :
+                '??') }}</span>
             </div>
 
             <div class="q-mb-sm">
@@ -112,6 +113,18 @@ const fetchReviewDetails = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const getImageUrl = (caminhoRelativo) => {
+  if (!caminhoRelativo) {
+    return defaultImageUrl;
+  }
+
+  // Garante que as barras estejam no formato correto para URL (/)
+  const caminhoCorrigido = caminhoRelativo.replace(/\\/g, '/');
+
+  // Monta e retorna a URL completa
+  return `${import.meta.env.VITE_API_URL}/${caminhoCorrigido}`;
 };
 
 const formatDate = (dateString) => {
