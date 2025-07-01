@@ -7,34 +7,15 @@
       </div>
 
       <q-form @submit.prevent="onSubmit" class="q-gutter-md">
-        <q-input
-          v-model="estabelecimento.nome"
-          filled
-          dark
-          color="amber"
-          label="Nome do Estabelecimento"
-          placeholder="Ex: Lapa Irish Pub"
-          lazy-rules
-          :rules="[val => !!val && val.length > 0 || 'O nome é obrigatório']"
-        />
+        <q-input v-model="estabelecimento.nome" filled dark color="amber" label="Nome do Estabelecimento"
+          placeholder="Ex: Lapa Irish Pub" lazy-rules
+          :rules="[val => !!val && val.length > 0 || 'O nome é obrigatório']" />
 
-        <q-input
-          v-model="estabelecimento.endereco"
-          filled
-          dark
-          color="amber"
-          label="Endereço (Opcional)"
-          placeholder="Ex: Rua Evaristo da Veiga, 147 - Lapa, Rio de Janeiro"
-        />
+        <q-input v-model="estabelecimento.endereco" filled dark color="amber" label="Endereço (Opcional)"
+          placeholder="Ex: Rua Evaristo da Veiga, 147 - Lapa, Rio de Janeiro" />
 
-        <q-file
-          v-model="imagemFile"
-          filled
-          dark
-          color="amber"
-          label="Foto do local (Opcional)"
-          accept="image/*"
-        >
+        <q-file v-model="imagemFile" filled dark color="amber" label="Foto do local (Opcional)"
+          accept=".jpg, .png, image/*">
           <template v-slot:prepend>
             <q-icon name="storefront" />
           </template>
@@ -73,7 +54,10 @@ function voltar() {
 async function onSubmit() {
   const formData = new FormData();
   formData.append('nome', estabelecimento.value.nome);
-  formData.append('endereco', estabelecimento.value.endereco);
+
+  if (estabelecimento.value.endereco) {
+    formData.append('endereco', estabelecimento.value.endereco);
+  }
 
   if (imagemFile.value) {
     formData.append('imagem', imagemFile.value);
@@ -81,14 +65,15 @@ async function onSubmit() {
 
   $q.loading.show({ message: 'Salvando...' });
 
+  console.log(Object.fromEntries(formData.entries()));
+
   try {
-    // Envia os dados para a API criar um novo estabelecimento
-    // await api.post('/estabelecimentos', formData, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data'
-    //   }
-    // });
-    await api.post('/estabelecimentos', formData); // Sem imagem, por enquanto
+    // Envia os dados para a API
+    await api.post('/estabelecimentos', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
     $q.notify({
       color: 'positive',

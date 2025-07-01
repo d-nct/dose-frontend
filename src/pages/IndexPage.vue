@@ -20,12 +20,13 @@
               {{ review.drink?.nome || "Birinight" }}, de {{ review.estabelecimento?.nome || "um botequim qualquer" }}
             </div>
             <div class="text-caption text-grey-6">{{ formatDate(review.data_criacao) || "Não lembro quando"
-              }}</div>
+            }}</div>
           </div>
 
           <div class="row q-col-gutter-md">
-            <div class="col-5 flex flex-column items-center"> <q-img :src="review.drink?.imagem || defaultImageUrl"
-                :ratio="1" class="rounded-borders q-mb-sm"> <template v-slot:error>
+            <div class="col-5 flex flex-column items-center"> <q-img :src="(review.imagem) || defaultImageUrl"
+                :ratio="1" class="rounded-borders q-mb-sm">
+                <template v-slot:error>
                   <div class="absolute-full flex flex-center bg-negative text-white">
                     Não foi possível carregar a imagem
                   </div>
@@ -39,7 +40,7 @@
               <div class="text-caption text-grey-5 full-width">
                 Preço: R$ {{ (review.preco?.$numberDecimal ?
                   parseFloat(review.preco.$numberDecimal).toFixed(2).replace('.', ',') :
-                '??') }}
+                  '??') }}
               </div>
 
               <div class="text-caption text-grey-5 full-width">
@@ -97,6 +98,18 @@ const truncateComment = (comment) => {
   }
   return comment.substring(0, CHARACTER_LIMIT) + '...';
 };
+
+// const getImageUrl = (caminhoRelativo) => {
+//   if (!caminhoRelativo) {
+//     return defaultImageUrl;
+//   }
+
+//   // Garante que as barras estejam no formato correto para URL (/)
+//   const caminhoCorrigido = caminhoRelativo.replace(/\\/g, '/');
+
+//   // Monta e retorna a URL completa
+//   return `${import.meta.env.VITE_API_URL}/${caminhoCorrigido}`;
+// };
 
 onMounted(() => {
   fetchReviews();

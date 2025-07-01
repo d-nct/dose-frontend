@@ -149,14 +149,12 @@ async function onSubmit() {
   formData.append('estabelecimento', avaliacao.value.estabelecimento);
   formData.append('drink', avaliacao.value.drink);
   formData.append('usuario', authStore.usuario._id);
+  formData.append('preco', avaliacao.value.preco);
 
   if (imagemFile.value) {
     formData.append('imagem', imagemFile.value); // O backend precisa processar este arquivo
   }
 
-  if (avaliacao.value.preco) {
-    formData.append('preco', avaliacao.value.preco);
-  }
 
   $q.loading.show({ message: 'Publicando...' });
 
