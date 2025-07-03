@@ -31,7 +31,7 @@
         <div class="q-py-md">
           <p class="q-mb-sm text-grey-5">Qual a sua nota?</p>
           <q-rating v-model="avaliacao.nota" size="2.5em" :max="5" color="amber" icon="star_border"
-            icon-selected="star" />
+            icon-selected="star" icon-half="star_half" half-increments />
         </div>
 
         <q-input v-model="avaliacao.comentario" filled dark color="amber" type="textarea" label="Escreva sua avaliação"
