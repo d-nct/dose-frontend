@@ -38,6 +38,13 @@
             <q-icon name="lock_reset" color="grey-5" /> </template>
         </q-input>
 
+        <q-input v-model="form.codigo_testador" label="código de testador beta" lazy-rules class="custom-input-register"
+          label-color="grey-5" color="primary" dark>
+          <template v-slot:prepend>
+            <q-icon name="vpn_key" color="grey-5" />
+          </template>
+        </q-input>
+
         <q-btn label="Registrar" type="submit" color="primary" class="full-width q-mt-xl" :loading="loading" />
 
         <q-separator color="grey-8" class="q-mt-md" />
@@ -58,7 +65,8 @@ import { useQuasar } from 'quasar';
 
 const form = ref({
   nome_usuario: '',
-  senha: ''
+  senha: '',
+  codigo_testador: ''
 });
 const passwordConfirm = ref('');
 const loading = ref(false);
@@ -82,10 +90,21 @@ const handleRegister = async () => {
     });
     return;
   }
+  if (!form.value.codigo_testador) {
+    $q.notify({
+      color: 'negative',
+      message: 'Por enquanto, estamos em beta! É necessário um código de testador!'
+    });
+    return;
+  }
 
   loading.value = true;
   try {
-    await authStore.register(form.value);
+    await authStore.register({
+      nome_usuario: form.value.nome_usuario,
+      senha: form.value.senha,
+      codigo_testador: form.value.codigo_testador
+    });
     // Assumindo que você tem uma rota 'register-success' ou similar para quando o registro é bem-sucedido
     // Ou você pode redirecionar para 'login'
     router.push({ name: 'register-success' }); // ou router.push({ name: 'login' });
