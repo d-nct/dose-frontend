@@ -17,53 +17,41 @@
 
     <div v-else class="review-details">
       <q-card flat bordered>
-        <q-card-section>
-          <div class="text-h5 text-weight-bold title-font">
-            {{ review.drink?.nome || "Drink não especificado" }}
-          </div>
-          <div class="text-subtitle1 text-grey-7">
-            por {{ review.estabelecimento?.nome || "Estabelecimento não informado" }}
-          </div>
-          <div class="text-caption text-grey-6 q-mt-sm">
-            Avaliado em {{ formatDate(review.data_criacao) }}
-          </div>
-        </q-card-section>
-
-        <q-separator />
-
-        <q-card-section class="row q-col-gutter-lg">
-          <div class="col-12 col-md-5 flex flex-center">
-            <q-img :src="getImageUrl(review.imagem) || defaultImageUrl" style="max-width: 300px">
-              <template v-slot:error>
-                <div class="absolute-full flex flex-center bg-negative text-white">
-                  Imagem não disponível
-                </div>
-              </template>
-            </q-img>
+        <div class="review-item q-mb-lg no-link-style">
+          <div class="row items-center justify-between q-mb-sm">
+            <div class="text-h7 text-weight-bold title-font">
+              {{ review.drink?.nome || "Drink não especificado" }}, de {{ review.estabelecimento?.nome || "Estabelecimento não informado" }}
+            </div>
+            <div class="text-caption text-grey-6">
+              Avaliado em {{ formatDate(review.data_criacao) }}
+            </div>
           </div>
 
-          <div class="col-12 col-md-7">
-            <div class="text-h6 q-mb-md">Detalhes da Avaliação</div>
+          <div class="row q-col-gutter-md">
+            <div class="col-12 col-md-5 flex flex-column items-center">
+              <q-img :src="getImageUrl(review.imagem) || defaultImageUrl" :ratio="1" class="rounded-borders q-mb-sm" style="max-width: 300px">
+                <template v-slot:error>
+                  <div class="absolute-full flex flex-center bg-negative text-white">
+                    Imagem não disponível
+                  </div>
+                </template>
+              </q-img>
 
-            <div class="row items-center q-mb-sm">
-              <span class="text-weight-bold q-mr-sm">Nota:</span>
               <q-rating :model-value="review.nota / 2" max="5" size="2em" color="primary" icon="star_border"
-                icon-selected="star" icon-half="star_half" readonly half-increments />
-            </div>
+                icon-selected="star" icon-half="star_half" readonly half-increments class="q-mb-xs" />
 
-            <div class="q-mb-sm">
-              <span class="text-weight-bold">Preço:</span>
-              <span class="text-grey-8"> R$ {{ (review.preco?.$numberDecimal ?
+              <div class="text-caption text-grey-5 full-width">
+                <span class="text-weight-bold">Preço:</span> R$ {{ (review.preco?.$numberDecimal ?
                 parseFloat(review.preco.$numberDecimal).toFixed(2).replace('.', ',') :
-                '??') }}</span>
+                '??') }}
+              </div>
+
+              <div class="text-caption text-grey-5 full-width">
+                <span class="text-weight-bold">Destilado Base:</span> {{ review.drink?.destilado_base || 'Não informado' }}
+              </div>
             </div>
 
-            <div class="q-mb-sm">
-              <span class="text-weight-bold">Destilado Base: </span>
-              <span class="text-grey-8"> {{ review.destilado_base || 'Não informado' }}</span>
-            </div>
-
-            <div class="q-mt-lg">
+            <div class="col-12 col-md-7">
               <div class="text-subtitle1 text-weight-bold">
                 {{ review.usuario?.nome_usuario || "Um usuário anônimo" }} comentou:
               </div>
@@ -72,7 +60,7 @@
               </p>
             </div>
           </div>
-        </q-card-section>
+        </div>
       </q-card>
     </div>
   </q-page>
@@ -169,5 +157,28 @@ onMounted(() => {
   padding: 16px;
   border-radius: 4px;
   white-space: pre-wrap; // Preserva quebras de linha e espaços
+}
+
+.review-item .text-h6 {
+  line-height: 1.2
+}
+
+.review-item-link,
+.review-item-link:hover,
+.review-item-link:visited,
+.review-item-link:active {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.comment-text {
+  overflow: hidden;
+}
+
+.no-link-style {
+  text-decoration: none;
+  color: inherit;
+  cursor: default;
 }
 </style>
