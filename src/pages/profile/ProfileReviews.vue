@@ -13,7 +13,7 @@
         <q-card-section>
           <div class="text-h6">Drink: {{ review.drink.nome }}</div>
           <div class="text-subtitle2">em {{ review.estabelecimento.nome }}</div>
-          <q-rating :model-value="review.nota / 2" :max="5" size="20px" color="amber" readonly />
+          <q-rating :model-value="review.nota / 2" :max="5" size="20px" color="amber" readonly half-increments icon-half="star_half" />
         </q-card-section>
         <q-card-section class="q-pt-none">
           {{ review.comentario }}
@@ -31,19 +31,24 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { api } from 'boot/axios';
-import { useQuasar } from 'quasar';
+import { useAuthStore } from 'src/stores/auth-store';
 
-const $q = useQuasar();
 const loading = ref(true);
 const avaliacoes = ref([]);
+const authStore = useAuthStore();
 
 async function fetchMyReviews() {
+  if (!authStore.usuario || !authStore.usuario._id) {
+    loading.value = false;
+    return;
+  }
+
   try {
-    // Você precisará criar este endpoint no seu backend
-    const response = await api.get('/usuarios/meu-perfil/avaliacoes');
+    const userId = authStore.usuario._id;
+    const response = await api.get(`/usuarios/${userId}/avaliacoes`);
     avaliacoes.value = response.data;
   } catch (err) {
-    $q.notify({ type: 'negative', message: 'Erro ao buscar suas avaliações.', error: err });
+    console.error('Erro ao buscar suas avaliações:', err);
   } finally {
     loading.value = false;
   }

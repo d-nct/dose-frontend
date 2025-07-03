@@ -61,11 +61,12 @@ const passwordData = ref({
 });
 
 async function updateProfile() {
-  // Você precisará deste endpoint no seu backend
+  if (!authStore.usuario || !authStore.usuario._id) return;
+
   try {
-    const response = await api.put('/usuarios/meu-perfil', formData.value);
-    // Atualiza o store local com os novos dados
-    authStore.setUser(response.data.usuario);
+    const userId = authStore.usuario._id;
+    const response = await api.put(`/usuarios/${userId}`, formData.value);
+    authStore.setUser(response.data); // Atualiza o usuário no store
     $q.notify({ type: 'positive', message: 'Nome de usuário atualizado!' });
   } catch (err) {
     $q.notify({ type: 'negative', message: err.response?.data?.message || 'Erro ao atualizar perfil.' });
@@ -73,9 +74,11 @@ async function updateProfile() {
 }
 
 async function updatePassword() {
-  // E deste também
+  if (!authStore.usuario || !authStore.usuario._id) return;
+
   try {
-    await api.put('/usuarios/meu-perfil/senha', passwordData.value);
+    const userId = authStore.usuario._id;
+    await api.put(`/usuarios/${userId}/senha`, passwordData.value);
     passwordData.value.senha_atual = '';
     passwordData.value.nova_senha = '';
     $q.notify({ type: 'positive', message: 'Senha alterada com sucesso!' });

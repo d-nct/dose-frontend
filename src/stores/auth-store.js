@@ -56,5 +56,10 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('userData');
       delete axios.defaults.headers.common['Authorization'];
     },
+
+    setUser(userData) {
+      this.usuario = userData;
+      localStorage.setItem('userData', JSON.stringify(userData));
+    },
   },
 });
