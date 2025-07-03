@@ -4,6 +4,7 @@ import { api } from 'boot/axios'
 export const useReviewsStore = defineStore('reviews', {
   state: () => ({
     reviews: [],
+    userReviews: [],
   }),
 
   actions: {
@@ -67,7 +68,7 @@ export const useReviewsStore = defineStore('reviews', {
     async fetchMyReviews(userId) {
       try {
         const response = await api.get(`/usuarios/${userId}/avaliacoes`)
-        this.reviews = response.data
+        this.userReviews = response.data
       } catch (err) {
         console.error('Erro ao buscar suas avaliações:', err)
       }

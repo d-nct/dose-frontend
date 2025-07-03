@@ -3,13 +3,13 @@
     <div v-if="loading" class="text-center q-py-xl">
       <q-spinner-dots color="primary" size="40px" />
     </div>
-    <div v-else-if="!reviewsStore.reviews || reviewsStore.reviews.length === 0" class="text-center q-py-xl">
+    <div v-else-if="reviewsStore.userReviews.length === 0" class="text-center text-grey q-py-xl">
       <q-icon name="rate_review" size="60px" class="q-mb-md" />
       <p class="text-h6">Nenhuma avaliação encontrada.</p>
       <p>Parece que você ainda não avaliou nenhum drink.</p>
     </div>
     <div v-else>
-      <router-link v-for="review in reviewsStore.reviews" :key="review._id"
+      <router-link v-for="review in reviewsStore.userReviews" :key="review._id"
         :to="{ name: 'review-details', params: { id: review._id } }" class="review-item-link">
         <div class="review-item q-mb-lg">
           <div class="row items-center justify-between q-mb-sm">
@@ -65,14 +65,14 @@
 import { ref, onMounted } from 'vue';
 import { useAuthStore } from 'src/stores/auth-store';
 // import { useRouter } from 'vue-router';
+import { useReviewsStore } from 'src/stores/reviews-store';
 
 // const router = useRouter();
 const loading = ref(true);
 const authStore = useAuthStore();
-const defaultImageUrl = import.meta.env.VITE_DEFAULT_IMAGE_URL;
-import { useReviewsStore } from 'src/stores/reviews-store';
-
 const reviewsStore = useReviewsStore();
+const defaultImageUrl = import.meta.env.VITE_DEFAULT_IMAGE_URL;
+
 const CHARACTER_LIMIT = 310;
 
 async function fetchMyReviews() {

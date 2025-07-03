@@ -59,7 +59,7 @@
             </div>
 
             <div class="q-mb-sm">
-              <span class="text-weight-bold">Destilado Base:</span>
+              <span class="text-weight-bold">Destilado Base: </span>
               <span class="text-grey-8"> {{ review.destilado_base || 'Não informado' }}</span>
             </div>
 
