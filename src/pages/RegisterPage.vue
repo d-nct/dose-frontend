@@ -1,10 +1,7 @@
 <template>
-  <div class="fullscreen dark-page flex flex-center column">
-    <q-page-sticky position="top-left" :offset="[18, 18]"> <q-btn icon="arrow_back" flat dense round color="grey-5"
-        @click="voltar" />
-    </q-page-sticky>
+  <div class="dark-page flex flex-center column">
 
-    <div class="q-mb-xs">
+    <div class="q-mb-xs q-mt-md">
       <img src="/icons/favicon-256x256.png" alt="Logo Dose"
         style="height: 180px; width: 180px; border-radius: 25%; object-fit: cover;" />
     </div>
@@ -74,13 +71,7 @@ const authStore = useAuthStore();
 const router = useRouter();
 const $q = useQuasar();
 
-const voltar = () => {
-  if (window.history.length > 1) {
-    router.go(-1);
-  } else {
-    router.push({ path: '/' });
-  }
-};
+
 
 const handleRegister = async () => {
   if (form.value.senha !== passwordConfirm.value) {

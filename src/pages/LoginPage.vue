@@ -1,11 +1,8 @@
 <template>
-  <q-page class="fullscreen dark-page flex flex-center column">
-    <q-page-sticky position="top-left" :offset="[18, 18]"> <q-btn icon="arrow_back" flat dense round color="grey-5"
-        @click="voltar" />
-    </q-page-sticky>
+  <div class="dark-page flex flex-center column">
 
 
-    <div class="claro text-h5 text-weight-bold q-mb-md">
+    <div class="claro text-h5 text-weight-bold q-mb-md q-mt-md">
       bora tomar uma
     </div>
 
@@ -41,7 +38,7 @@
         </div>
       </q-form>
     </div>
-  </q-page>
+  </div>
 </template>
 
 <script setup>
@@ -60,13 +57,7 @@ const authStore = useAuthStore();
 const router = useRouter();
 const $q = useQuasar();
 
-const voltar = () => {
-  if (window.history.length > 1) {
-    router.go(-1);
-  } else {
-    router.push({ path: '/' });
-  }
-};
+
 
 const handleLogin = async () => {
   loading.value = true;

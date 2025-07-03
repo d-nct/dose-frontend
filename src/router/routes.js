@@ -61,7 +61,6 @@ const routes = [
           },
         ],
       },
-      // --- Rotas de Autenticação (fora do layout principal) ---
       {
         path: '/login',
         component: () => import('pages/LoginPage.vue'),
