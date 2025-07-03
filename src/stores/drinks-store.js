@@ -26,6 +26,16 @@ export const useDrinksStore = defineStore('drinks', {
         console.error('Erro ao criar o drink:', error);
         throw error;
       }
+    },
+
+    async fetchDrinkById(drinkId) {
+      try {
+        const response = await api.get(`/drinks/${drinkId}`);
+        return response.data;
+      } catch (error) {
+        console.error(`Erro ao buscar o drink ${drinkId}:`, error);
+        throw error;
+      }
     }
   },
 });

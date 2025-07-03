@@ -60,7 +60,7 @@
 
             <div class="q-mb-sm">
               <span class="text-weight-bold">Destilado Base:</span>
-              <span class="text-grey-8"> {{ review.drink?.destilado_base || 'Não informado' }}</span>
+              <span class="text-grey-8"> {{ review.destilado_base || 'Não informado' }}</span>
             </div>
 
             <div class="q-mt-lg">
@@ -80,13 +80,14 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
-// import { useRoute, useRouter } from 'vue-router';
+import { useRoute, /* useRouter */ } from 'vue-router';
 import { useReviewsStore } from 'src/stores/reviews-store';
+// import { useDrinksStore } from 'src/stores/drinks-store'; // Importa o store de drinks
 
 const route = useRoute();
 // const router = useRouter();
 const reviewsStore = useReviewsStore();
+// const drinksStore = useDrinksStore(); // Instancia o store de drinks
 
 const loading = ref(false);
 const review = ref(null);
@@ -99,17 +100,19 @@ const fetchReviewDetails = async () => {
 
   loading.value = true;
   try {
-    // Tenta buscar do store primeiro, se já estiver lá
-    const existingReview = reviewsStore.reviews.find(r => r._id === reviewId.value);
-    if (existingReview) {
-      review.value = existingReview;
-    } else {
-      // Se não, busca da API (supondo que você tenha um método para isso)
-      review.value = await reviewsStore.fetchReviewById(reviewId.value);
-    }
+    const fetchedReview = await reviewsStore.fetchReviewById(reviewId.value);
+
+    // Se o drink não veio populado ou não tem o destilado, busca em separado
+    // if (fetchedReview && fetchedReview.drink && !fetchedReview.drink.destilado_base) {
+    //   const fullDrink = await drinksStore.fetchDrinkById(fetchedReview.drink._id);
+    //   fetchedReview.drink = fullDrink; // Substitui o objeto 'drink' pela versão completa
+    // }
+
+    review.value = fetchedReview;
+
   } catch (error) {
     console.error('Erro ao buscar detalhes da avaliação:', error);
-    review.value = null; // Garante que a mensagem de erro seja mostrada
+    review.value = null;
   } finally {
     loading.value = false;
   }
