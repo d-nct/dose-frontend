@@ -6,7 +6,7 @@
           {{ review.drink?.nome || "Birinight" }}, de {{ review.estabelecimento?.nome || "um botequim qualquer" }}
         </div>
         <div class="text-caption text-grey-6">{{ formatDate(review.data_criacao) || "Não lembro quando"
-          }}</div>
+        }}</div>
       </div>
 
       <div class="row q-col-gutter-md">
@@ -29,7 +29,7 @@
           </div>
 
           <div class="text-caption text-grey-5 full-width">
-            Destilado: {{ review.drink?.destilado_base || "??" }}
+            Destilado: {{ review.destilado_base || "??" }}
           </div>
         </div>
 
