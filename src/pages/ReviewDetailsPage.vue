@@ -1,10 +1,5 @@
 <template>
-  <!-- <q-page class="fullscreen dark-page flex flex-center column"> -->
-  <q-page class="q-pa-md flex">
-    <!-- <q-page-sticky position="top-left" :offset="[18, 18]"> <q-btn icon="arrow_back" flat dense round color="grey-5"
-        @click="voltar" />
-    </q-page-sticky> -->
-
+  <q-page class="q-pa-lg bg-grey-10 text-white">
     <div v-if="loading" class="flex flex-center q-my-xl">
       <q-spinner-dots color="primary" size="50px" />
     </div>
@@ -15,49 +10,60 @@
       <q-btn to="/" label="Voltar para a Home" color="primary" flat />
     </div>
 
-    <div v-else class="review-details">
-      <q-card flat bordered>
-        <div class="review-item q-mb-lg no-link-style">
-          <div class="row items-center justify-between q-mb-sm">
-            <div class="text-h7 text-weight-bold title-font">
-              {{ review.drink?.nome || "Drink não especificado" }}, de {{ review.estabelecimento?.nome || "Estabelecimento não informado" }}
+    <div v-else class="review-details q-mx-auto q-py-md">
+      <q-card flat bordered class="bg-grey-9 text-white">
+        <div class="review-item q-pa-md no-link-style">
+          <div class="row items-center justify-between q-mb-md">
+            <div class="text-h5 text-weight-bold title-font">
+              {{ review.drink?.nome || "Drink não especificado" }}, de {{ review.estabelecimento?.nome ||
+                "Estabelecimento não informado" }}
             </div>
-            <div class="text-caption text-grey-6">
+            <div class="text-subtitle2 text-grey-4">
               Avaliado em {{ formatDate(review.data_criacao) }}
             </div>
           </div>
 
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-md-5 flex flex-column items-center">
-              <q-img :src="getImageUrl(review.imagem) || defaultImageUrl" :ratio="1" class="rounded-borders q-mb-sm" style="max-width: 300px">
+          <div class="row q-col-gutter-lg items-start">
+            <div class="col-12 col-md-6 flex flex-center">
+              <q-img :src="getImageUrl(review.imagem) || defaultImageUrl" :ratio="1" class="rounded-borders q-mb-md"
+                style="max-width: 400px; width: 100%;">
                 <template v-slot:error>
                   <div class="absolute-full flex flex-center bg-negative text-white">
                     Imagem não disponível
                   </div>
                 </template>
               </q-img>
-
-              <q-rating :model-value="review.nota / 2" max="5" size="2em" color="primary" icon="star_border"
-                icon-selected="star" icon-half="star_half" readonly half-increments class="q-mb-xs" />
-
-              <div class="text-caption text-grey-5 full-width">
-                <span class="text-weight-bold">Preço:</span> R$ {{ (review.preco?.$numberDecimal ?
-                parseFloat(review.preco.$numberDecimal).toFixed(2).replace('.', ',') :
-                '??') }}
-              </div>
-
-              <div class="text-caption text-grey-5 full-width">
-                <span class="text-weight-bold">Destilado Base:</span> {{ review.drink?.destilado_base || 'Não informado' }}
-              </div>
             </div>
 
-            <div class="col-12 col-md-7">
-              <div class="text-subtitle1 text-weight-bold">
-                {{ review.usuario?.nome_usuario || "Um usuário anônimo" }} comentou:
+            <div class="col-12 col-md-6">
+              <div class="text-h6 q-mb-md">Detalhes da Avaliação</div>
+
+              <div class="row items-center q-mb-sm">
+                <span class="text-weight-bold q-mr-sm text-primary">Nota:</span>
+                <q-rating :model-value="review.nota / 2" max="5" size="2.5em" color="primary" icon="star_border"
+                  icon-selected="star" icon-half="star_half" readonly half-increments />
               </div>
-              <p class="text-black q-mt-sm comment-box">
-                {{ review.comentario || "Nenhum comentário deixado." }}
-              </p>
+
+              <div class="q-mb-sm">
+                <span class="text-weight-bold text-primary">Preço:</span>
+                <span class="text-white"> R$ {{ (review.preco?.$numberDecimal ?
+                  parseFloat(review.preco.$numberDecimal).toFixed(2).replace('.', ',') :
+                  '??') }}</span>
+              </div>
+
+              <div class="q-mb-lg">
+                <span class="text-weight-bold text-primary">Destilado Base: </span>
+                <span class="text-white"> {{ review.destilado_base || 'Não informado' }}</span>
+              </div>
+
+              <div class="q-mt-lg">
+                <div class="text-h6 text-weight-bold q-mb-sm">
+                  {{ review.usuario?.nome_usuario || "Um usuário anônimo" }} comentou:
+                </div>
+                <p class="text-white q-mt-sm comment-box bg-grey-8">
+                  {{ review.comentario || "Nenhum comentário deixado." }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -147,20 +153,23 @@ onMounted(() => {
 }
 
 .review-details {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 .comment-box {
-  background-color: #f9f9f9;
+  background-color: #333;
   border-left: 4px solid $primary;
-  padding: 16px;
-  border-radius: 4px;
-  white-space: pre-wrap; // Preserva quebras de linha e espaços
+  padding: 20px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  font-size: 1.1em;
+  line-height: 1.6;
 }
 
 .review-item .text-h6 {
-  line-height: 1.2
+  line-height: 1.2;
 }
 
 .review-item-link,
@@ -172,13 +181,34 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.comment-text {
-  overflow: hidden;
-}
-
 .no-link-style {
   text-decoration: none;
   color: inherit;
   cursor: default;
+}
+
+.q-img {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.text-h5 {
+  font-size: 2.2em;
+}
+
+.text-subtitle2 {
+  font-size: 1.1em;
+}
+
+.text-caption {
+  font-size: 1em;
+}
+
+.text-h6 {
+  font-size: 1.5em;
+}
+
+.text-subtitle1 {
+  font-size: 1.2em;
 }
 </style>
