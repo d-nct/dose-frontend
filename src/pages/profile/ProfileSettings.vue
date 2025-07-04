@@ -5,12 +5,8 @@
     </q-card-section>
     <q-card-section>
       <q-form @submit.prevent="updateProfile" class="q-gutter-md">
-        <q-input
-          v-model="formData.nome_usuario"
-          label="Nome de Usuário"
-          filled dark color="amber"
-          :rules="[val => !!val || 'Nome de usuário não pode ser vazio']"
-        />
+        <q-input v-model="formData.nome_usuario" label="Nome de Usuário" filled dark color="amber"
+          :rules="[val => !!val || 'Nome de usuário não pode ser vazio']" />
         <q-btn type="submit" label="Salvar Nome de Usuário" color="primary" />
       </q-form>
     </q-card-section>
@@ -22,20 +18,10 @@
     </q-card-section>
     <q-card-section>
       <q-form @submit.prevent="updatePassword" class="q-gutter-md">
-        <q-input
-          type="password"
-          v-model="passwordData.senha_atual"
-          label="Senha Atual"
-          filled dark color="amber"
-          :rules="[val => !!val || 'Campo obrigatório']"
-        />
-        <q-input
-          type="password"
-          v-model="passwordData.nova_senha"
-          label="Nova Senha"
-          filled dark color="amber"
-          :rules="[val => val && val.length >= 6 || 'A senha deve ter no mínimo 6 caracteres']"
-        />
+        <q-input type="password" v-model="passwordData.senha_atual" label="Senha Atual" filled dark color="amber"
+          :rules="[val => !!val || 'Campo obrigatório']" />
+        <q-input type="password" v-model="passwordData.nova_senha" label="Nova Senha" filled dark color="amber"
+          :rules="[val => val && val.length >= 6 || 'A senha deve ter no mínimo 6 caracteres']" />
         <q-btn type="submit" label="Alterar Senha" color="primary" />
       </q-form>
     </q-card-section>
