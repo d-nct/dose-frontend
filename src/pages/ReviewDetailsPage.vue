@@ -28,9 +28,8 @@
               <q-img :src="getImageUrl(review.imagem) || defaultImageUrl" :ratio="1" class="rounded-borders q-mb-md"
                 style="max-width: 400px; width: 100%;">
                 <template v-slot:error>
-                  <div class="absolute-full flex flex-center bg-negative text-white">
-                    Imagem não disponível
-                  </div>
+                  <q-img :src="defaultImageUrl" :ratio="1" class="rounded-borders q-mb-sm">
+                  </q-img>
                 </template>
               </q-img>
             </div>

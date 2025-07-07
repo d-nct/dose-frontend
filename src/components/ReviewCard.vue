@@ -13,9 +13,8 @@
         <div class="col-5 flex flex-column items-center">
           <q-img :src="getImageUrl(review.imagem) || defaultImageUrl" :ratio="1" class="rounded-borders q-mb-sm">
             <template v-slot:error>
-              <div class="absolute-full flex flex-center bg-negative text-white">
-                Não foi possível carregar a imagem
-              </div>
+              <q-img :src="defaultImageUrl" :ratio="1" class="rounded-borders q-mb-sm">
+              </q-img>
             </template>
           </q-img>
 
